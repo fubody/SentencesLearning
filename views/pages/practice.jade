@@ -1,0 +1,13 @@
+//
+   Created by lijie8 on 2015/2/1.
+
+extends ../layout
+
+block content
+   script(type='text/javascript', src='/practice.js')
+   if sentences
+      span#service_data(style='display:none')
+         |#{sentences}
+   .container
+      .row
+         #sentence_body

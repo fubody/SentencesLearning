@@ -1,0 +1,16 @@
+//
+   Created by lijie8 on 2015/2/1.
+extends ../layout
+
+block content
+   script(type='text/javascript', src='/admin.js')
+   script(type='text/javascript', src='/date.js')
+   if sentences
+      span#service_data(style='display:none')
+         |#{sentences}
+   .container
+      .row
+         div
+            a.btn.btn-info(type='button',href='/sentence') 添加新句子
+         br
+         div#admin_content
