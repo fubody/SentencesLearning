@@ -1,11 +1,12 @@
 extends ../layout
 
 block content
+    script(type='text/javascript', src='/index.js')
     .container
         .row
             .panel.panel-default
                 .panel-heading
-                    h1 今日任务
+                    h3 今日任务
                 .panel-body
                     h1(align='center')
                         small 共有句子数
@@ -14,4 +15,5 @@ block content
                         small 今天已完成
                         span 10
                     div(align='center')
-                        a.btn.btn-info.btn-lg(type='button',href='./practice') 开始学习
+                        a.btn.btn-info.btn-lg(type='button',onclick='turnToPractice()') 开始学习（L）
+                        a.btn.btn-info.btn-lg(type='button',onclick='turnToAdmin()',style='margin-left:10px') 查看句子（A）

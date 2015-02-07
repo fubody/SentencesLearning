@@ -7,6 +7,8 @@ var PageController = require('../controllers/page_controller')
 
 var router = express.Router();
 
-router.get('/', Sentence.fetchAllSentences, PageController.turn_to_practice)
+router.get('/', Sentence.fetchTodaySentences, PageController.turn_to_practice)
+
+router.post('/finished',Sentence.practice_finished)
 
 module.exports = router;

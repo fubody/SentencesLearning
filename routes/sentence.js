@@ -5,10 +5,7 @@ var express = require('express');
 var Sentence = require('../controllers/sentence')
 var router = express.Router();
 
-router.get('/', function (req, res) {
-    res.render('sentence',{})
-})
-
 router.post('/new', Sentence.createSentence)
+//router.get('/test', Sentence.fetchTodaySentences)
 
 module.exports = router;

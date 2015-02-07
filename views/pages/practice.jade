@@ -5,9 +5,19 @@ extends ../layout
 
 block content
    script(type='text/javascript', src='/practice.js')
+   script(type='text/javascript', src='/utils.js')
    if sentences
       span#service_data(style='display:none')
          |#{sentences}
    .container
       .row
+         h4
+            span.label.label-primary.label(style='margin-right:10px') 进度：
+            span#progress_proporation
+         .progress
+            #progress_correct.progress-bar.progress-bar-success.progress-bar-striped(role='progressbar' style='width: 0%' align='center')
+               span#correct_num
+            #progress_wrong.progress-bar.progress-bar-warning.progress-bar-striped(role='progressbar' style='width: 0%' align='center')
+               span#wrong_num
          #sentence_body
+         #test_area

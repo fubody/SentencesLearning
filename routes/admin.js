@@ -7,6 +7,6 @@ var PageController = require('../controllers/page_controller')
 
 var router = express.Router();
 
-router.get('/', Sentence.fetchAllSentences, PageController.turnToAdmin)
+router.get('/', Sentence.fetchPageCount,Sentence.fetchPartSentences, PageController.turnToAdmin)
 
 module.exports = router;

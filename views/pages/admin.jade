@@ -5,12 +5,35 @@ extends ../layout
 block content
    script(type='text/javascript', src='/admin.js')
    script(type='text/javascript', src='/date.js')
+   script(type='text/javascript', src='/utils.js')
    if sentences
       span#service_data(style='display:none')
          |#{sentences}
+      span#page_info(style='display:none')
+         |#{page_info}
    .container
       .row
          div
-            a.btn.btn-info(type='button',href='/sentence') 添加新句子
+            a.btn.btn-info(type='button',onclick='addSentence()') 添加新句子（N）
+            a.btn.btn-info(type='button',style='margin-left:10px',onclick='backToIndex()') 返回首页（B）
          br
-         div#admin_content
+         #admin_content
+         .span(align='center')
+            ul#page_navigation.pagination
+         #add_sentence.modal.fade(tabindex='-1', role='dialog', aria-labelledby='modalLabel' aria-hidden='true')
+            .modal-dialog
+               .modal-content
+                  .modal-header
+                     button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
+                     h4#modalLabel.modal-title 添加新句子
+                  .modal-body
+                     div
+                        h4
+                           span.label.label-info 英文句子
+                        textarea#english_content.input-lg.form-control(name='english_content')
+                        h4
+                           span.label.label-info 汉语意思
+                        textarea#chinese_content.input-lg.form-control(name='chinese_content')
+                  .modal-footer
+                     a.btn.btn-default(type='button',data-dismiss='modal') 关闭
+                     a#add_button.btn.btn-primary(type='button',data-loading-text='添加中...',onclick='checkSentenceSubmit()') 添加
