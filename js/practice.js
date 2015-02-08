@@ -56,18 +56,46 @@ function nextSentence() {
     if(!isShowMeaning) {
         return;
     }
-    if (all_sentences && all_sentences.length > 0 && !isFinished) {
+    update_sentence_status(function (err) {
+        if(err) {
+            alert(err);
+        } else {
+            var result = getNextSentence();
+            if (result) {
+                isShowMeaning = false;
+                render_current_sentence();
+            } else {
+                render_finished();
+            }
+        }
+    });
+}
+
+function getNextSentence() {
+    if (all_sentences && all_sentences.length > 0 && correct_number < all_sentences.length) {
         current_index++;
         current_index = current_index % all_sentences.length;
         while(sentences_status[current_index] == status_code.correct) {
             current_index++;
             current_index = current_index % all_sentences.length;
         }
-        isShowMeaning = false;
-        render_current_sentence();
+        return true;
     } else {
-        render_finished();
+        return false;
     }
+}
+
+function update_sentence_status(callback) {
+    $.ajax({
+        type: 'POST',
+        url:  '/practice/finished',
+        data: all_sentences[current_index],
+        dataType: 'json'
+    }).done(function (data) {
+        callback();
+    }).fail(function () {
+        callback('连接网络失败');
+    });
 }
 
 function render_current_sentence() {
@@ -91,20 +119,13 @@ function render_current_sentence() {
 }
 
 function render_finished() {
-    $.ajax({
-        type: 'POST',
-        url:  '/practice/finished',
-        data: {sentences:all_sentences},
-        dataType: 'json'
-    }).done(function (data) {
-        renderProgressBar();
-        var sentence_html_info =
-            '<div class="panel panel-info"><div class="panel-heading"><h4>练习</h4></div>' +
-            '<div class="panel-body" align="center"><h3>已完成当天学习</h3>' +
-            '<div><a class="btn btn-info btn-lg pull-right"><span class="glyphicon glyphicon-forward">返回（B）</span></a></div></div></div>';
-        $('#sentence_body').html(sentence_html_info);
-        isFinished = true;
-    });
+    renderProgressBar();
+    var sentence_html_info =
+        '<div class="panel panel-info"><div class="panel-heading"><h4>练习</h4></div>' +
+        '<div class="panel-body" align="center"><h3>已完成当天学习</h3>' +
+        '<div><a class="btn btn-info btn-lg pull-right"><span class="glyphicon glyphicon-forward">返回（B）</span></a></div></div></div>';
+    $('#sentence_body').html(sentence_html_info);
+    isFinished = true;
 }
 
 document.onkeypress=function(event){

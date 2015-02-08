@@ -111,7 +111,9 @@ function checkSentenceSubmit() {
         dataType: 'json'
     }).done(function (data) {
         currentSentences.unshift(data.sentence);
-        currentSentences.splice(currentSentences.length - 1, 1);
+        if (currentSentences.length > Config.page_size) {
+            currentSentences.splice(currentSentences.length - 1, 1);
+        }
         refreshSentences();
         resetModal();
         $('#add_sentence').modal('toggle');

@@ -91,7 +91,7 @@ module.exports.fetchPageCount = function (req, res, next) {
     Sentence.count(function (err, count) {
         if (err){
         } else {
-            req.body.page_info = {page_count:Math.ceil(count/Config.page_zie)};
+            req.body.page_info = {page_count:Math.ceil(count/Config.page_size)};
             next()
         }
     })
@@ -106,7 +106,7 @@ module.exports.fetchPartSentences = function (req, res, next) {
         page = 1;
     }
 
-    var page_size = Config.page_zie;
+    var page_size = Config.page_size;
     Sentence.find().sort('-create_at').limit(page_size).skip(page_size*(page-1)).exec(function(err, sentences){
         if(err){
             console.log(err)
@@ -119,31 +119,22 @@ module.exports.fetchPartSentences = function (req, res, next) {
 }
 
 module.exports.practice_finished = function(req, res) {
-    var data = req.body;
-    if (data) {
-        console.log('finish')
-        var sentences = data.sentences;
-        if(sentences) {
-            var index = 0;
-            var update_sentence_level = function () {
-                var id = sentences[index].id;
-                Sentence.findOne({id:id}).exec(function (err, _sentence) {
-                    _sentence.familiarity_level = sentences[index].familiarity_level;
-                    _sentence.save();
-                    index++;
-                    if(index < sentences.length) {
-                        update_sentence_level();
-                    } else {
-                        res.writeHead(200, {"Content-Type": "application/json;charset=UTF-8"});
-                        res.write(
-                            JSON.stringify({result: 'success'}));
-                        res.end();
-                    }
-                });
-            };
-            update_sentence_level();
-        }
-    }
+    var sentence = req.body;
+    console.log(sentence)
+    if(sentence) {
+        var id = sentence.id;
+        Sentence.findOne({id:id}).exec(function (err, _sentence) {
+            _sentence.familiarity_level = sentence.familiarity_level;
+            _sentence.save(function (err, data) {
+                if (err) {
 
-    res.end();
+                } else {
+                    res.writeHead(200, {"Content-Type": "application/json;charset=UTF-8"});
+                    res.write(
+                        JSON.stringify({result: 'success'}));
+                    res.end();
+                }
+            });
+        });
+    }
 }
