@@ -13,7 +13,7 @@ var all_sentences;
 var sentences_status = [];
 var correct_number = 0;
 var wrong_number = 0;
-var isShowMeaning = false;
+var isShowEnglish = false;
 var isFinished = false;
 
 $(document).ready(function() {
@@ -48,7 +48,7 @@ function renderProgressBar() {
 }
 
 function nextSentence() {
-    if(!isShowMeaning) {
+    if(!isShowEnglish) {
         return;
     }
     update_sentence_status(function (err) {
@@ -57,7 +57,7 @@ function nextSentence() {
         } else {
             var result = getNextSentence();
             if (result) {
-                isShowMeaning = false;
+                isShowEnglish = false;
                 render_current_sentence();
             } else {
                 render_finished();
@@ -99,9 +99,9 @@ function render_current_sentence() {
     if (sentence) {
         var sentence_html_info =
             '<div class="panel panel-info"><div class="panel-heading">练习</div>' +
-            '<div class="panel-body"><h4>' + sentence.english_content + '</h4>';
-        if (isShowMeaning) {
-            sentence_html_info += '<h4>' + sentence.chinese_content + '</h4>'
+            '<div class="panel-body"><h4>' + sentence.chinese_content + '</h4>';
+        if (isShowEnglish) {
+            sentence_html_info += '<h4>' + sentence.english_content + '</h4>'
         } else {
             sentence_html_info += '<a type="button" onclick="sentenceRight()" class="btn btn-default">准确复述（1）</a>' +
             '<a type="button" onclick="sentenceWrong()" class="btn btn-default">复述错误（2）</a>';
@@ -126,12 +126,12 @@ function render_finished() {
 document.onkeypress=function(event){
     if (event.keyCode == 49) {
         //'1'
-        if(correct_number < all_sentences.length && !isShowMeaning) {
+        if(correct_number < all_sentences.length && !isShowEnglish) {
             sentenceRight();
         }
     } else if (event.keyCode == 50) {
         //'2'
-        if(correct_number < all_sentences.length && !isShowMeaning) {
+        if(correct_number < all_sentences.length && !isShowEnglish) {
             sentenceWrong();
         }
     } else if (event.keyCode == 68 || event.keyCode == 100) {
@@ -151,7 +151,7 @@ function sentenceRight() {
     }
     sentences_status[current_index] = status_code.correct;
     correct_number++;
-    isShowMeaning = true;
+    isShowEnglish = true;
     all_sentences[current_index].familiarity_level++;
     render_current_sentence();
 }
@@ -161,7 +161,7 @@ function sentenceWrong() {
         sentences_status[current_index] = status_code.wrong;
         wrong_number++;
     }
-    isShowMeaning = true;
+    isShowEnglish = true;
     render_current_sentence();
 }
 

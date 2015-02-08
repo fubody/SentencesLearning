@@ -176,7 +176,6 @@ module.exports.fetchPartSentences = function (req, res, next) {
 
 module.exports.practice_finished = function(req, res) {
     var sentence = req.body;
-    console.log(sentence)
     if(sentence) {
         var id = sentence.id;
         Sentence.findOne({id:id}).exec(function (err, _sentence) {
