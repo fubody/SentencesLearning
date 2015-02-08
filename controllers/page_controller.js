@@ -12,3 +12,7 @@ module.exports.turn_to_practice = function (req, res) {
     req.body.sentences = JSON.stringify(req.body.sentences);
     res.render('practice', req.body);
 }
+
+module.exports.turn_to_index = function (req, res) {
+    res.render('index', req.body);
+}

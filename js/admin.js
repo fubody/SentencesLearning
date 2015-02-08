@@ -85,7 +85,7 @@ document.onkeypress=function(event){
 }
 
 function addSentence() {
-    $('#add_sentence').modal()
+    $('#add_sentence').modal();
 }
 
 function backToIndex() {
@@ -111,7 +111,7 @@ function checkSentenceSubmit() {
         dataType: 'json'
     }).done(function (data) {
         currentSentences.unshift(data.sentence);
-        if (currentSentences.length > Config.page_size) {
+        if (currentSentences.length > 10) {
             currentSentences.splice(currentSentences.length - 1, 1);
         }
         refreshSentences();

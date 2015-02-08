@@ -51,22 +51,78 @@ module.exports.fetchAllSentences = function (req, res, next) {
     })
 }
 
-module.exports.fetchTodaySentences = function(req, res, next) {
+function getReviewDatesInfo(isTotal) {
     var date_now = Date.now();
     var review_days = Config.time_constants.review_days;
-    var review_dates = [{
-        create_at:{},
-        familiarity_level:{'$lt': 2}
-    }];
+    var review_dates = [];
     for (var i = 0; i < review_days.length; i++) {
         var date = new Date(date_now - review_days[i] * Config.time_constants.day);
-        var date_floor = new Date(date.getFullYear(), date.getMonth(), date.getDay() + 1);
-        var date_ceiling = new Date(date.getFullYear(), date.getMonth(), date.getDay() + 2);
-        review_dates[i] = {
-            create_at: {'$gte': date_floor, '$lt': date_ceiling},
-            familiarity_level:{'$lt': i + 2}
+        var date_floor = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        var date_ceiling = new Date(date_floor.getTime() + Config.time_constants.day);
+        if (isTotal) {
+            review_dates[i] = {
+                create_at: {'$gte': date_floor, '$lt': date_ceiling}
+            }
+        } else {
+            review_dates[i] = {
+                create_at: {'$gte': date_floor, '$lt': date_ceiling},
+                familiarity_level:{'$lt': i + 2}
+            }
         }
     }
+    return review_dates;
+}
+
+module.exports.getTodayPracticeNum = function (req, res, next) {
+    var review_dates_practice = getReviewDatesInfo(false);
+    var index = 0;
+
+    var practice_num = 0;
+    var query_practice_num = function () {
+        Sentence.count(review_dates_practice[index]).exec(function (err, count) {
+            if (err) {
+
+            } else {
+                practice_num += count;
+            }
+            index++;
+            if(index < review_dates_practice.length) {
+                query_practice_num();
+            } else {
+                req.body.practice_num = practice_num;
+                next();
+            }
+        });
+    };
+    query_practice_num();
+}
+
+module.exports.getTodayTotalNum = function (req, res, next) {
+    var review_dates_total = getReviewDatesInfo(true);
+    var index = 0;
+
+    var total_num = 0;
+    var query_total_num = function () {
+        Sentence.count(review_dates_total[index]).exec(function (err, count) {
+            if (err) {
+
+            } else {
+                total_num += count;
+            }
+            index++;
+            if(index < review_dates_total.length) {
+                query_total_num();
+            } else {
+                req.body.total_num = total_num;
+                next();
+            }
+        });
+    };
+    query_total_num();
+}
+
+module.exports.fetchTodaySentences = function(req, res, next) {
+    var review_dates = getReviewDatesInfo(false);
     var index = 0;
 
     var today_sentences = [];

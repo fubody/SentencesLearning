@@ -3,10 +3,11 @@
  */
 var express = require('express');
 
+var Sentence = require('../controllers/sentence')
+var PageController = require('../controllers/page_controller')
+
 var router = express.Router();
 
-router.get('/', function (req, res) {
-    res.render('index',{})
-})
+router.get('/', Sentence.getTodayTotalNum, Sentence.getTodayPracticeNum, PageController.turn_to_index);
 
 module.exports = router;
