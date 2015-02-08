@@ -45,11 +45,6 @@ function renderProgressBar() {
         $('#progress_correct').width('100%');
         $('#progress_wrong').width('0');
     };
-    var test = 'current_index:' + current_index + ',';
-    test += 'correct_number:' + correct_number + ',';
-    test += 'wrong_number:' + wrong_number + ',';
-    test += 'isShowMeaning:' + isShowMeaning;
-    $('#test_area').text(test);
 }
 
 function nextSentence() {
