@@ -66,7 +66,7 @@ function getReviewDatesInfo(isTotal) {
         } else {
             review_dates[i] = {
                 create_at: {'$gte': date_floor, '$lt': date_ceiling},
-                familiarity_level:{'$lt': i + 2}
+                familiarity_level:{'$lt': 7 - i}
             }
         }
     }
