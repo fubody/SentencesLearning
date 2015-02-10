@@ -127,7 +127,7 @@ module.exports.fetchTodaySentences = function(req, res, next) {
 
     var today_sentences = [];
     var query_sentences = function () {
-        Sentence.find(review_dates[index]).sort('-create_at').exec(function (err, sentences) {
+        Sentence.find(review_dates[index]).sort('+create_at').exec(function (err, sentences) {
             if (sentences && sentences.length > 0) {
                 today_sentences = today_sentences.concat(sentences);
             }
